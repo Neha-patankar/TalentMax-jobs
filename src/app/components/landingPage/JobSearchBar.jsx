@@ -23,7 +23,8 @@ const JobSearchBar = () => {
   
   return (
     <div className="w-full max-w-4xl mx-auto p-6 text-center">
-      <h1 className="text-4xl font-bold mb-2 text-gray-900">Find your dream job now</h1>
+      <h1 className="text-4xl font-bold mb-2 text-gray-900">Find your dream job 
+        <span className='text-orange-600'> @ Talent </span><span className='text-blue-950'>Max</span></h1>
       <p className="text-lg mb-8 text-gray-700">5 lakh+ jobs for you to explore</p>
       
       <div className="bg-white rounded-full shadow-lg p-2">
@@ -83,7 +84,7 @@ const JobSearchBar = () => {
           
           <button 
             type="submit"
-            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-full ml-2"
+            className="w-full md:w-auto bg-blue-900 hover:bg-blue-300 text-white font-medium py-2 px-6 rounded-full ml-2"
           >
             Search
           </button>

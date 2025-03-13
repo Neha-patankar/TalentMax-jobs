@@ -1,17 +1,36 @@
 // pages/registration.js
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 const CreateAccount = () => {
   const [selectedRole, setSelectedRole] = useState("candidate");
+  const [currentTileIndex, setCurrentTileIndex] = useState(0);
+
+  // List of mentor profiles or tiles
+  const tiles = [
+    { title: "Mentor 1", image: "/landingpage/Loginimag3.png" },
+    { title: "Mentor 2", image: "/landingpage/loginimg.png" },
+    { title: "Mentor 3", image: "/landingpage/loginimg2.png" },
+    { title: "Mentor 4", image: "/landingpage/internshipportal.png" },
+  ];
+
+  // Automatically cycle through tiles every 4 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTileIndex((prevIndex) =>
+        prevIndex === tiles.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [tiles.length]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl bg-white rounded-lg shadow-lg overflow-hidden flex flex-col md:flex-row">
         {/* Left side - Yellow background with mentorship info */}
-        <div className="w-full md:w-5/12 bg-yellow-400 p-8 relative">
+        <div className="w-full md:w-5/12 bg-gray-200 p-8 relative">
           {/* Company logo */}
           <div className="mb-6">
             <Image
@@ -23,83 +42,53 @@ const CreateAccount = () => {
             />
           </div>
 
-          {/* Mentor profiles */}
-          {/* <div className="mt-32 relative">
-            <div className="bg-white rounded-lg p-4 shadow-md mb-4 w-4/5 ml-auto">
-              <div className="flex items-center">
-                <div className="relative">
-                  <div className="h-12 w-12 rounded-full bg-gray-300 overflow-hidden">
+          {/* Scroll slider for mentor profiles */}
+          <div className="relative flex-grow mb-6 rounded-lg overflow-hidden" style={{ height: "350px" }}>
+            {tiles.map((tile, index) => (
+              <div
+                key={index}
+                className={`absolute inset-0 transition-all duration-700 ease-in-out w-full h-full ${
+                  index === currentTileIndex
+                    ? "opacity-100 translate-x-0"
+                    : index < currentTileIndex
+                    ? "opacity-0 -translate-x-full"
+                    : "opacity-0 translate-x-full"
+                }`}
+                style={{ backfaceVisibility: "hidden" }}
+              >
+                <div className="p-4 h-full flex flex-col">
+                  <h3 className="text-white font-bold text-xl mb-4">
+                    {/* {tile.title} */}
+                  </h3>
+                  <div className="relative flex-grow w-full rounded-lg overflow-hidden">
                     <Image
-                      src="/placeholder-mentor1.jpg"
-                      alt="Vraj Shah"
-                      width={48}
-                      height={48}
-                      className="object-cover"
+                      src={tile.image}
+                      alt={tile.title}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-lg"
                     />
                   </div>
-                  <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-yellow-400 rounded-full flex items-center justify-center text-xs">
-                    ✓
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold text-sm">Vraj Shah</p>
-                  <p className="text-xs text-gray-600">Software Engineer</p>
-                  <p className="text-xs flex items-center">
-                    <Image
-                      src="/google-logo.png"
-                      alt="Google"
-                      width={40}
-                      height={12}
-                    />
-                  </p>
                 </div>
               </div>
-              <button className="mt-2 bg-gray-800 text-white text-xs rounded-full px-3 py-1">
-                Book Now
-              </button>
-            </div>
+            ))}
+          </div>
 
-            {/* Another Mentor 
-            <div className="absolute left-8 top-24">
-              <span className="bg-yellow-500 text-white text-xs rounded-full px-2 py-1">
-                4.9/5
-              </span>
-            </div>
-
-            <div className="bg-white rounded-lg p-4 shadow-md w-4/5 mr-auto">
-              <div className="flex items-center">
-                <div className="relative">
-                  <div className="h-12 w-12 rounded-full bg-gray-300 overflow-hidden">
-                    <Image
-                      src="/placeholder-mentor2.jpg"
-                      alt="Nitya Mohta"
-                      width={48}
-                      height={48}
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 h-5 w-5 bg-yellow-400 rounded-full flex items-center justify-center text-xs">
-                    ✓
-                  </div>
-                </div>
-                <div className="ml-3">
-                  <p className="font-semibold text-sm">Nitya Mohta</p>
-                  <p className="text-xs text-gray-600">Program Manager II</p>
-                  <p className="text-xs flex items-center">
-                    <Image
-                      src="/amazon-logo.png"
-                      alt="Amazon"
-                      width={40}
-                      height={12}
-                    />
-                  </p>
-                </div>
-              </div>
-              <button className="mt-2 bg-gray-800 text-white text-xs rounded-full px-3 py-1">
-                Book Now
-              </button>
-            </div>
-          </div> */}
+          {/* Indicator dots for tiles */}
+          <div className="flex justify-center space-x-2 mt-auto">
+            {tiles.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentTileIndex(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  currentTileIndex === index
+                    ? "bg-white scale-110"
+                    : "bg-white bg-opacity-50"
+                }`}
+                aria-label={`View slide ${index + 1}`}
+              />
+            ))}
+          </div>
 
           {/* <div className="absolute bottom-8 left-0 right-0 text-center">
             <h2 className="text-blue-900 text-2xl font-bold">Mentorship</h2>
@@ -111,7 +100,7 @@ const CreateAccount = () => {
         <div className="w-full md:w-7/12 p-8">
           <div className="max-w-md mx-auto">
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Create a new account
+              Join a Talent Max jobs...
             </h1>
             <p className="text-gray-600 mb-8">
               Join Unstop and find your dream job or recruit talented candidates
@@ -122,7 +111,7 @@ const CreateAccount = () => {
               <div
                 className={`border rounded-lg p-6 cursor-pointer transition-all ${
                   selectedRole === "candidate"
-                    ? "border-green-500 ring-1 ring-green-500"
+                    ? "border-blue-900 ring-4 ring-blue-900"
                     : "border-gray-200 hover:border-blue-200"
                 }`}
                 onClick={() => setSelectedRole("candidate")}
@@ -145,15 +134,13 @@ const CreateAccount = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">
-                      Sign up as a Candidate
-                    </h3>
+                    <h3 className="font-semibold text-lg">Candidate Sign up</h3>
                     <p className="text-gray-600">
                       Compete, learn, and apply for jobs and internships
                     </p>
                   </div>
                   {selectedRole === "candidate" && (
-                    <div className="ml-auto bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center">
+                    <div className="ml-auto bg-orange-500 text-white rounded-full h-6 w-6 flex items-center justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4"
@@ -176,13 +163,13 @@ const CreateAccount = () => {
               <div
                 className={`border rounded-lg p-6 cursor-pointer transition-all ${
                   selectedRole === "recruiter"
-                    ? "border-green-500 ring-1 ring-green-500"
+                    ? "border-orange-600 ring-4 ring-orange-600"
                     : "border-gray-200 hover:border-blue-200"
                 }`}
                 onClick={() => setSelectedRole("recruiter")}
               >
                 <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-4">
+                  <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-900 mr-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       className="h-6 w-6"
@@ -199,16 +186,14 @@ const CreateAccount = () => {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">
-                      Sign up as a Recruiter
-                    </h3>
+                    <h3 className="font-semibold text-lg">Recruiter Sign up</h3>
                     <p className="text-gray-600">
                       Host competitions, hire talent, and offer career
                       opportunities
                     </p>
                   </div>
                   {selectedRole === "recruiter" && (
-                    <div className="ml-auto bg-green-500 text-white rounded-full h-6 w-6 flex items-center justify-center">
+                    <div className="ml-auto bg-orange-600 text-white rounded-full h-6 w-6 flex items-center justify-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-4 w-4"
@@ -234,14 +219,14 @@ const CreateAccount = () => {
               {selectedRole === "candidate" ? (
                 <Link
                   href="/candidate"
-                  className="bg-green-500 hover:bg-green-600 text-white rounded-lg px-6 py-2 font-semibold text-lg"
+                  className="bg-blue-900 hover:bg-blue-900 text-white rounded-lg px-6 py-2 font-semibold text-lg"
                 >
                   Next
                 </Link>
               ) : (
                 <Link
                   href="/recruiter"
-                  className="bg-green-500 hover:bg-green-600 text-white rounded-lg px-6 py-2 font-semibold text-lg"
+                  className="bg-blue-900 hover:bg-blue-900 text-white rounded-lg px-6 py-2 font-semibold text-lg"
                 >
                   Next
                 </Link>
@@ -254,4 +239,4 @@ const CreateAccount = () => {
   );
 };
 
-export default CreateAccount;
+export default CreateAccount

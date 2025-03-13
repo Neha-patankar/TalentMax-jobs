@@ -28,22 +28,17 @@ const RecruiterRegistrationForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 md:p-15">
       <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto shadow-lg rounded-lg overflow-hidden">
         {/* Left side - Branding/Image */}
-        <div className="w-full md:w-2/5 bg-gray-100 p-12 flex flex-col relative">
+        <div className="w-full md:w-2/4 bg-[#e2f6e2] p-12 flex flex-col relative">
           <div className="mb-8">
             <div className="text-white text-3xl font-bold">
-              <Image
-                src="/companylogo.png"
-                alt="Talent Max"
-                width={200}
-                height={200}
-                className="mr-2"
-              />
+              
+              <h1 className="text-black md:text-nowrap">  Recruiter <span className="text-orange-600"> @ Talent Max Jobs </span></h1>
             </div>
           </div>
-          {/* <div className="bg-amber-500">
+           <div className="bg-amber-500">
             <div className="bg-white/10 rounded-lg p-6">
               <div className="text-white text-2xl font-bold mb-2">
                 Assessments
@@ -106,7 +101,7 @@ const RecruiterRegistrationForm = () => {
                 </div>
               </div>
             </div>
-          </div> */}
+          </div> 
         </div>
 
         {/* Right side - Form */}
@@ -129,7 +124,7 @@ const RecruiterRegistrationForm = () => {
               </svg>
             </button>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Sign up as recruiter
+              Sign up as <span className="text-orange-600">Recruiter</span> 
             </h1>
           </div>
 
@@ -299,7 +294,7 @@ const RecruiterRegistrationForm = () => {
                 placeholder="Confirm Password"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
               />
             </div>
             <div>
@@ -316,16 +311,16 @@ const RecruiterRegistrationForm = () => {
                   required
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
                 />
               </div>
 
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full py-3 text-white font-medium rounded-lg bg-blue-600 hover:bg-blue-700 focus:outline-none"
+                className="w-full py-3 text-white font-medium rounded-lg bg-blue-900 hover:bg-blue-900 focus:outline-none"
               >
-                Sign Up
+                Register
               </button>
             </div>
           </form>

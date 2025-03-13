@@ -156,23 +156,18 @@ const CandidateRegistrationForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 md:p-10">
       <div className="flex flex-col md:flex-row w-full max-w-6xl mx-auto shadow-lg rounded-lg overflow-hidden">
         {/* Left side - Branding/Image */}
-        <div className="w-full md:w-2/5 bg-gray-100 p-12 flex flex-col relative">
+        <div className="w-full md:w-2/4 bg-[#e2f6e2] p-12 flex flex-col relative">
           <div className="mb-8">
             <div className="text-white text-3xl font-bold">
-              <Image
-                src="/companylogo.png"
-                alt="Company Logo"
-                width={500}
-                height={500}
-                
-              />
+              
+            <h1 className="text-black md:text-nowrap">  Candidate <span className="text-orange-600">@ Talent Max Jobs </span></h1>
             </div>
           </div>
 
-          {/* <div className="bg-blue-700 rounded-lg">
+           <div className="bg-blue-900 rounded-lg">
             <div className="bg-white/10 rounded-lg p-6">
               <div className="text-white text-2xl font-bold mb-2">
                 Assessments
@@ -241,7 +236,7 @@ const CandidateRegistrationForm = () => {
                 </div>
               </div>
             </div>
-          </div> */}
+          </div> 
         </div>
 
         {/* Right side - Form */}
@@ -270,12 +265,12 @@ const CandidateRegistrationForm = () => {
               </svg>
             </button>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Sign up as Candidate
+              Sign up as<span className="text-orange-600"> Candidate</span>
             </h1>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md" role="alert">
+            <div className="mb-4 p-3 bg-red-100 text-orange-600 rounded-md" role="alert">
               {error}
             </div>
           )}
@@ -466,7 +461,7 @@ const CandidateRegistrationForm = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   aria-required="true"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
                 />
               </div>
             </div>
@@ -484,7 +479,7 @@ const CandidateRegistrationForm = () => {
                 type="file"
                 accept=".pdf,.doc,.docx"
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
               />
               <p className="mt-1 text-xs text-gray-500">
                 Accepted formats: PDF, DOC, DOCX
@@ -494,7 +489,7 @@ const CandidateRegistrationForm = () => {
             <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-4">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
-                <a href="/login" className="text-blue-600 font-medium">
+                <a href="/login" className="text-blue-900 font-medium">
                   Login
                 </a>
               </p>
@@ -504,7 +499,7 @@ const CandidateRegistrationForm = () => {
                 className={`px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    : "bg-blue-900 hover:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900"
                 }`}
               >
                 {loading ? "Registering..." : "Register"}

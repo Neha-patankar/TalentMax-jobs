@@ -52,7 +52,7 @@ const Dropdown = ({ title, links }) => {
             </ul>
           </div>
           <div className="w-64 bg-white p-4">
-            <h3 className="font-bold text-blue-600 mb-3">Popular   Options</h3>
+            <h3 className="font-bold text-blue-600 mb-3">Popular Options</h3>
             <ul className="space-y-2">
               {links.right.map((link, index) => (
                 <li key={index} className="hover:text-blue-500 cursor-pointer transition-colors">
@@ -102,7 +102,7 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center justify-between flex-1 ml-10">
-            <nav className="flex items-center space-x-6">
+            <nav className="flex items-center space-x-10">
               <Dropdown
                 title="Jobs"
                 links={{
@@ -127,7 +127,7 @@ const Navbar = () => {
             </nav>
 
             {/* Search Bar */}
-            <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-64">
+            <div className="flex items-center border border-gray-300 rounded-full px-4 py-2 w-96">
               <input
                 type="text"
                 placeholder="Search jobs here"
@@ -143,12 +143,13 @@ const Navbar = () => {
             {/* Auth Buttons */}
             <div className="flex space-x-4">
               <Link href="/login">
-                <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-full transition-colors">Login</button>
+                <button className="bg-blue-900 hover:bg-blue-400 text-white py-2 px-6 text-lg rounded-lg  transition-colors">Login</button>
               </Link>
              
-              {/* <Link href="/candidate">
-                <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 text-md text-nowrap rounded transition-colors">Candidate Registration</button>
+              <Link href="/createaccount">
+                <button className="bg-orange-600 hover:bg-orange-400 text-white py-2 px-6 text-lg text-nowrap rounded-lg transition-colors"> Register</button>
               </Link>
+               {/* 
               <Link href="/recruiter">
                 <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 text-md text-nowrap rounded transition-colors">Recruiter Registration</button>
               </Link> */}
@@ -208,11 +209,13 @@ const Navbar = () => {
             {/* Mobile Auth Buttons */}
             <div className="mt-4 space-y-2">
               <Link href="/login" className="block">
-                <button className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition-colors">Login</button>
+                <button className="w-full bg-blue-900 hover:bg-blue-400 text-white py-2 px-4 rounded transition-colors">Login</button>
               </Link>
-              {/* <Link href="/candidate">
-                <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition-colors">Candidate Registration</button>
+
+              <Link href="/createaccount">
+                <button className="bg-orange-700 hover:bg-orange-700 text-white py-2 px-4 text-md text-nowrap rounded-full transition-colors"> Registration</button>
               </Link>
+              {/*
               <Link href="/recruiter">
                 <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded transition-colors">Recruiter Registration</button>
               </Link> */}
