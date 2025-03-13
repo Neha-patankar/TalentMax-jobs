@@ -52,7 +52,7 @@ const Dropdown = ({ title, links }) => {
             </ul>
           </div>
           <div className="w-64 bg-white p-4">
-            <h3 className="font-bold text-blue-600 mb-3">Popular Options</h3>
+            <h3 className="font-bold text-blue-600 mb-3">Popular   Options</h3>
             <ul className="space-y-2">
               {links.right.map((link, index) => (
                 <li key={index} className="hover:text-blue-500 cursor-pointer transition-colors">
