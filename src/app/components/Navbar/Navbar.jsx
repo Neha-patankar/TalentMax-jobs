@@ -113,7 +113,7 @@ const Navbar = () => {
               <Dropdown
                 title="Companies"
                 links={{
-                  left: ['Top Employers', 'Hiring Now', 'Explore Companies', 'Internships'],
+                  left: ['Top Employerss', 'Hiring Now', 'Explore Companies', 'Internships'],
                   right: ['MNCs', 'Startups', 'IT Companies', 'Manufacturing', 'Consulting', 'Government Jobs', 'View all companies']
                 }}
               />
