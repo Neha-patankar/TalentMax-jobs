@@ -1,17 +1,25 @@
 "use client";
+
 import React, { useState } from "react";
-import Image from "next/image";
+import { useRouter } from 'next/navigation';
 
 const RecruiterRegistrationForm = () => {
+  const router = useRouter();
+  
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    gender: "",
+    companyName: "",
+    address : "",
     password: "",
     confirmPassword: "",
   });
+  
+  const [resumeFile, setResumeFile] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,10 +29,70 @@ const RecruiterRegistrationForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFileChange = (e) => {
+    setResumeFile(e.target.files[0]);
+  };
+
+  // Register recruiter function
+  const registerRecruiter = async (formData) => {
+    try {
+      const response = await fetch('http://localhost:8080/api/recruiters/register', {
+        method: 'POST',
+        // Don't set Content-Type when using FormData
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Recruiter form submitted:", formData);
-    // Add API call logic here
+    setError('');
+    
+    // Form validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    
+    try {
+      setLoading(true);
+      
+      const formDataObj = new FormData();
+      formDataObj.append('firstName', formData.firstName);
+      formDataObj.append('lastName', formData.lastName);
+      formDataObj.append('email', formData.email);
+      formDataObj.append('phone', formData.phone);
+      formDataObj.append('companyName', formData.companyName);
+      formDataObj.append('address', formData.address);
+      formDataObj.append('password', formData.password);
+      formDataObj.append('role', 'recruiter'); // Add role identifier
+      
+      // Only append resume if it exists
+      if (resumeFile) {
+        formDataObj.append('resumeUpload', resumeFile);
+      }
+      
+      const result = await registerRecruiter(formDataObj);
+      console.log('Registration successful:', result);
+      
+      // Redirect to login page or show success message
+      router.push('/login');
+    } catch (error) {
+      console.error('Error during registration:', error);
+      setError(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -34,11 +102,11 @@ const RecruiterRegistrationForm = () => {
         <div className="w-full md:w-2/4 bg-[#e2f6e2] p-12 flex flex-col relative">
           <div className="mb-8">
             <div className="text-white text-3xl font-bold">
-              
-              <h1 className="text-black md:text-nowrap">  Recruiter <span className="text-orange-600"> @ Talent Max Jobs </span></h1>
+              <h1 className="text-black md:text-nowrap">Recruiter <span className="text-orange-600">@ Talent Max Jobs</span></h1>
             </div>
           </div>
-           <div className="bg-amber-500">
+
+          <div className="bg-amber-500">
             <div className="bg-white/10 rounded-lg p-6">
               <div className="text-white text-2xl font-bold mb-2">
                 Assessments
@@ -101,7 +169,7 @@ const RecruiterRegistrationForm = () => {
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
 
         {/* Right side - Form */}
@@ -124,9 +192,15 @@ const RecruiterRegistrationForm = () => {
               </svg>
             </button>
             <h1 className="text-2xl font-semibold text-gray-800">
-              Sign up as <span className="text-orange-600">Recruiter</span> 
+              Sign up as <span className="text-orange-600">Recruiter</span>
             </h1>
           </div>
+
+          {error && (
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -223,42 +297,43 @@ const RecruiterRegistrationForm = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Gender <span className="text-red-500">*</span>
+              <label
+                htmlFor="companyName"
+                className="block text-sm font-medium text-gray-700"
+              >
+               Company Name <span className="text-red-500">*</span>
               </label>
-              <div className="mt-1 flex space-x-4">
-                <div
-                  className={`border rounded-full px-6 py-2 text-sm cursor-pointer ${
-                    formData.gender === "Male"
-                      ? "bg-blue-600 text-white"
-                      : "border-gray-300"
-                  }`}
-                  onClick={() => setFormData({ ...formData, gender: "Male" })}
-                >
-                  Male
-                </div>
-                <div
-                  className={`border rounded-full px-6 py-2 text-sm cursor-pointer ${
-                    formData.gender === "Female"
-                      ? "bg-blue-600 text-white"
-                      : "border-gray-300"
-                  }`}
-                  onClick={() => setFormData({ ...formData, gender: "Female" })}
-                >
-                  Female
-                </div>
-                <div
-                  className={`border rounded-full px-6 py-2 text-sm cursor-pointer ${
-                    formData.gender === "Other"
-                      ? "bg-blue-600 text-white"
-                      : "border-gray-300"
-                  }`}
-                  onClick={() => setFormData({ ...formData, gender: "Other" })}
-                >
-                  Other
-                </div>
-              </div>
+              <input
+                id="companyName"
+                name="companyName"
+                type="text"
+                required
+                placeholder="Company name"
+                value={formData.companyName}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
             </div>
+
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-gray-700"
+              >
+               Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="address"
+                name="address"
+                type="text"
+                required
+                placeholder="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
 
             <div>
               <label
@@ -297,31 +372,44 @@ const RecruiterRegistrationForm = () => {
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
               />
             </div>
+
             <div>
-                <label
-                  htmlFor="confirmPassword"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Resume Upload 
-                </label>
-                <input
-                  id="upload"
-                  name="upload"
-                  type="file"
-                  required
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
-                />
-              </div>
+              <label
+                htmlFor="resumeUpload"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Resume Upload
+              </label>
+              <input
+                id="resumeUpload"
+                name="resumeUpload"
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-900 focus:border-blue-900"
+              />
+              <p className="text-xs text-gray-500 mt-1">Max file size: 5MB</p>
+            </div>
 
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full py-3 text-white font-medium rounded-lg bg-blue-900 hover:bg-blue-900 focus:outline-none"
+                className={`w-full py-3 text-white font-medium rounded-lg bg-blue-900 hover:bg-blue-800 focus:outline-none ${
+                  loading ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+                disabled={loading}
               >
-                Register
+                {loading ? 'Registering...' : 'Register'}
               </button>
+            </div>
+            
+            <div className="mt-4 text-center">
+              <p className="text-gray-600">
+                Already have an account?{' '}
+                <a href="/login" className="text-blue-600 hover:text-blue-800">
+                  Login here
+                </a>
+              </p>
             </div>
           </form>
         </div>

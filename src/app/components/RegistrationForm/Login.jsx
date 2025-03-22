@@ -1,9 +1,39 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { authService } from "../../service/Api"; // Make sure this is correctly imported
+import axios from 'axios';
+
+// Create API client with the correct base URL
+const apiClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Auth service with login method
+const authService = {
+  login: async (userData) => {
+    try {
+      const { email, password, userType } = userData;
+      
+      // Use the correct endpoint for candidate login
+      const endpoint = userType === 'candidate' 
+        ? '/api/login'  // Correct endpoint for candidates
+        : '/api/recruiters/login';
+      
+      console.log(`Attempting login with endpoint: ${endpoint}`);
+      const response = await apiClient.post(endpoint, { email, password });
+      return response.data;
+    } catch (error) {
+      console.error('Login error details:', error.response || error);
+      throw error;
+    }
+  }
+};
 
 const Login = () => {
   const router = useRouter();
@@ -14,6 +44,7 @@ const Login = () => {
   const [currentTileIndex, setCurrentTileIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState(""); // New state for success message
 
   // Tile content for scrolling display
   const tiles = [
@@ -33,7 +64,7 @@ const Login = () => {
     return () => clearInterval(interval);
   }, [tiles.length]);
 
-  // Handle form submission
+  // Handle form submission with debugging
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -45,27 +76,69 @@ const Login = () => {
 
     setLoading(true);
     setError("");
+    setSuccessMessage(""); // Clear any previous success message
+
+    // For testing/debugging purposes
+    console.log(`Attempting to login as ${activeTab} with email: ${email}`);
 
     try {
-      // Call the login API based on active tab (user type)
-      const endpoint = activeTab === "candidate" ? "candidateLogin" : "recruiterLogin";
-      const response = await authService[endpoint]({ email, password });
+      // Use the login method
+      const response = await authService.login({
+        email,
+        password,
+        userType: activeTab
+      });
+
+      console.log("Login response:", response);
 
       // Handle successful login
       if (response && response.token) {
-        // Save token to localStorage or cookies
+        // Save token and user info to localStorage
         localStorage.setItem("token", response.token);
         localStorage.setItem("userType", activeTab);
+        
+        if (response.userData) {
+          localStorage.setItem("userData", JSON.stringify(response.userData));
+        }
 
-        // Redirect to appropriate dashboard
-        const redirectPath = activeTab === "candidate" ? "/candidate/dashboard" : "/recruiter/dashboard";
-        router.push(redirectPath);
+        // Set success message
+        setSuccessMessage(`Welcome back! Login successful.`);
+        
+        // Redirect after a short delay to show the success message
+        setTimeout(() => {
+          const redirectPath = activeTab === "candidate" ? "/candidate/dashboard" : "/recruiter/dashboard";
+          router.push(redirectPath);
+        }, 1500);
       } else {
-        setError("Login failed. Please check your credentials.");
+        setError("Login successful but no token received. Please contact support.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setError(err.response?.data?.message || "An error occurred during login. Please try again.");
+      
+      // Enhanced error handling with more details
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log("Error status:", err.response.status);
+        console.log("Error data:", err.response.data);
+        
+        if (err.response.status === 404) {
+          setError("Login endpoint not found. This could be a server configuration issue.");
+        } else if (err.response.status === 401) {
+          setError("Invalid email or password. Please try again.");
+        } else if (err.response.status === 403) {
+          setError("Your account is not authorized. Please contact support.");
+        } else {
+          setError(err.response.data?.message || `Server error (${err.response.status}). Please try again.`);
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
+        console.log("No response received:", err.request);
+        setError("No response from server. Please check your internet connection.");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("An unexpected error occurred. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -191,6 +264,13 @@ const Login = () => {
                   </button>
                 </div>
 
+                {/* Success message display */}
+                {successMessage && (
+                  <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-md text-sm">
+                    {successMessage}
+                  </div>
+                )}
+
                 {/* Error message display */}
                 {error && (
                   <div className="mb-4 p-3 bg-red-100 text-orange-700 rounded-md text-sm">
@@ -244,7 +324,7 @@ const Login = () => {
                       >
                         <path
                           fillRule="evenodd"
-                          d="M10 3C6.373 3 3.254 5.55 1.133 9.113a1 1 0 000 .774C3.254 14.45 6.373 17 10 17c3.627 0 6.746-2.55 8.867-6.113a1 1 0 000-.774C16.746 5.55 13.627 3 10 3zm0 2a7.977 7.977 0 015.878 2.5H4.122A7.977 7.977 0 0110 5zm-3.5 4.5a3.5 3.5 0 107 0 3.5 3.5 0 00-7 0zm3.5 5a7.977 7.977 0 01-5.878-2.5h11.756A7.977 7.977 0 0110 14.5zm3.5-4.5a3.5 3.5 0 11-7 0 3.5 3.5 0 017 0z"
+                          d="M3.172 3.172a4 4 0 011.585-1.586M16.828 16.828a4 4 0 01-1.585 1.586M7.5 10c0-1.105.895-2 2-2s2 .895 2 2-.895 2-2 2-2-.895-2-2zM.458 10c1.732-4.147 5.388-7 9.542-7s7.81 2.853 9.542 7c-1.732 4.147-5.388 7-9.542 7S2.19 14.147.458 10z"
                           clipRule="evenodd"
                         />
                       </svg>
@@ -252,32 +332,29 @@ const Login = () => {
                   </button>
                 </div>
 
-                {/* Login button */}
                 <button
                   onClick={handleLogin}
-                  className="w-full py-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-900"
+                  className={`w-full p-3 rounded-lg text-white ${
+                    loading ? "bg-gray-400" : "bg-blue-700 hover:bg-blue-800"
+                  }`}
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Log In"}
                 </button>
 
-                <div className="flex items-center justify-between mt-6">
-                  <Link href="/forgot-password" className="text-sm text-blue-900 hover:underline">
-                    Forgot Password?
-                  </Link>
-                  <Link href="/createaccount" className="text-sm text-blue-900 hover:underline">
-                    Create an Account
+                {/* Forgot password */}
+                <div className="text-sm mt-4 text-center">
+                  <Link href="/forgot-password">
+                    <p className="text-blue-500 hover:underline">Forgot password?</p>
                   </Link>
                 </div>
 
-                {/* Social Login */}
-                <div className="mt-6">
-                  <button className="w-full py-3 mb-3 bg-orange-600 text-white rounded-md font-semibold hover:bg-orange-700">
-                    Continue with Google
-                  </button>
-                  <button className="w-full py-3 bg-blue-900 text-white rounded-md font-semibold hover:bg-blue-900">
-                    Continue with Facebook
-                  </button>
+                {/* Sign up option */}
+                <div className="text-sm mt-2 text-center">
+                  Don't have an account?{" "}
+                  <Link href={activeTab === "candidate" ? "/candidate" : "/recruiter"}>
+                    <span className="text-blue-500 hover:underline">Sign up</span>
+                  </Link>
                 </div>
               </div>
             </div>

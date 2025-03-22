@@ -31,6 +31,36 @@ const LandingPage = () => {
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-16">
+       {/* Jobs Card */}
+        <div className="bg-blue-500 rounded-2xl p-6 flex items-center justify-between shadow-5xl">
+            <div>
+              <h2 className="text-2xl font-bold mb-1">Jobs</h2>
+              <p className="text-gray-700">
+                Explore
+                <br />
+                Diverse Careers
+              </p>
+            </div>
+            <div className="relative h-32 w-32">
+              <Image
+                src="/landingpage/internshipportal.png"
+                alt="Jobs"
+                layout="fill"
+                className="rounded-xl object-cover"
+              />
+              <div className="absolute -top-2 -right-2">
+                <div className="bg-white rounded-full h-8 w-8 flex items-center justify-center shadow-md">
+                  G
+                </div>
+              </div>
+              <div className="absolute top-6 -right-4">
+                <div className="bg-white rounded-full h-8 w-8 flex items-center justify-center shadow-md">
+                  A
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Internships Card */}
           <div className="bg-green-400 rounded-2xl p-6 flex items-center justify-between shadow-5xl">
             <div>
@@ -94,35 +124,8 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Jobs Card */}
-          <div className="bg-blue-500 rounded-2xl p-6 flex items-center justify-between shadow-5xl">
-            <div>
-              <h2 className="text-2xl font-bold mb-1">Jobs</h2>
-              <p className="text-gray-700">
-                Explore
-                <br />
-                Diverse Careers
-              </p>
-            </div>
-            <div className="relative h-32 w-32">
-              <Image
-                src="/landingpage/internshipportal.png"
-                alt="Jobs"
-                layout="fill"
-                className="rounded-xl object-cover"
-              />
-              <div className="absolute -top-2 -right-2">
-                <div className="bg-white rounded-full h-8 w-8 flex items-center justify-center shadow-md">
-                  G
-                </div>
-              </div>
-              <div className="absolute top-6 -right-4">
-                <div className="bg-white rounded-full h-8 w-8 flex items-center justify-center shadow-md">
-                  A
-                </div>
-              </div>
-            </div>
-          </div>
+      
+         
         </div>
 
         {/* Who's Using Section */}
