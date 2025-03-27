@@ -1,7 +1,10 @@
 import Footer from "./components/Footer/Footer";
+import CompanySlider from "./components/landingPage/CompanySlider";
+import JobVacanciesByLocation from "./components/landingPage/JobVacanciesByLocation";
+import JobVacanciesPage from "./components/landingPage/JobVacanciesPage";
 import LandingPage from "./components/landingPage/LandingPage";
 import Navbar from "./components/Navbar/Navbar";
-import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
+
 
 
  function Home() {
@@ -9,6 +12,9 @@ import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
     <>
       <Navbar/>
       <LandingPage/>
+      <JobVacanciesPage/>
+      <JobVacanciesByLocation/>
+      <CompanySlider/>
       <Footer/>
       {/* <RegistrationForm/> */}
     </>

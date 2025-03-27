@@ -106,7 +106,7 @@ const Login = () => {
         
         // Redirect after a short delay to show the success message
         setTimeout(() => {
-          const redirectPath = activeTab === "candidate" ? "/candidate/dashboard" : "/recruiter/dashboard";
+          const redirectPath = activeTab === "candidate" ? "/profile" : "/profile";
           router.push(redirectPath);
         }, 1500);
       } else {
